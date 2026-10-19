@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 import pymongo
 from dotenv import load_dotenv
 import os
@@ -24,28 +24,12 @@ def home():
     return render_template("index.html")
 
 
+@app.route('/api')
 @app.route('/data')
 def read_data():
     with open('data.json', 'r') as f:
         data = json.load(f)
     return jsonify(data)
-
-
-@app.route('/api', methods=['POST'])
-def write_data():
-    data = {
-        "name": "John Doe",
-        "age": 30,
-        "city": "New York"
-    }
-    result =collection.insert_one(data)
-    data["_id"] = str(result.inserted_id)
-    with open(file_path, "r") as f:
-        existing_data = json.load(f)
-    existing_data.append(data)
-    with open(file_path, "w") as f:
-        json.dump(existing_data, f)    
-    return jsonify({"message": "Data inserted successfully!"}), 201
 
 
 @app.route("/submit", methods=["POST"])
@@ -73,9 +57,14 @@ def submit():
         with open(file_path, "w") as f:
             json.dump(existing_data, f)
 
-        return jsonify({"message": "Data inserted successfully!"}), 201
+        return redirect(url_for("success"))
     except (pymongo.errors.PyMongoError, OSError, ValueError) as error:
         return render_template("index.html", error=f"Unable to submit data: {error}"), 400
+
+
+@app.route("/success")
+def success():
+    return render_template("success.html")
 
 
 
