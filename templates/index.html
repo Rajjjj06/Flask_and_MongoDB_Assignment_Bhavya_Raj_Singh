@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Flask Form</title>
+  </head>
+  <body>
+    <h1>Submit Your Details</h1>
+
+    {% if error %}
+    <p role="alert" style="color: red">{{ error }}</p>
+    {% endif %}
+
+    <form action="/submit" method="POST">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <br /><br />
+
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="age" required />
+      <br /><br />
+
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" required />
+      <br /><br />
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
